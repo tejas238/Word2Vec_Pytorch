@@ -12,6 +12,7 @@ Fast word2vec implementation at competitive speed compared with fasttext. The sl
 ## Supported features
 
 * Skip-gram
+* CBOW
 * Batch update
 * Cosine Annealing
 * Negative Sampling
