@@ -63,6 +63,7 @@ class DataReader:
             self.negatives += [wid] * int(c)
         self.negatives = np.array(self.negatives)
         np.random.shuffle(self.negatives)
+        #print (self.negatives)
 
     def getNegatives(self, target, size):  # TODO check equality with target
         response = self.negatives[self.negpos:self.negpos + size]
@@ -106,5 +107,9 @@ class Word2vecDataset(Dataset):
         all_u = [u for batch in batches for u, _, _ in batch if len(batch) > 0]
         all_v = [v for batch in batches for _, v, _ in batch if len(batch) > 0]
         all_neg_v = [neg_v for batch in batches for _, _, neg_v in batch if len(batch) > 0]
+        #print ('batches', batches)
+        #print('collate_all_u', all_u)
+        #print('collate_all_v', all_v)
+        #print('collate_all_neg_v', all_neg_v)
 
         return torch.LongTensor(all_u), torch.LongTensor(all_v), torch.LongTensor(all_neg_v)
