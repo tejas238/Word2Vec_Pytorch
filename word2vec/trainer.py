@@ -22,8 +22,8 @@ class Word2VecTrainer:
         self.batch_size = batch_size
         self.iterations = iterations
         self.initial_lr = initial_lr
-        #self.model = SkipGramModel(self.emb_size, self.emb_dimension)
-        self.model = CBOWModel(self.emb_size, self.emb_dimension)
+        self.model = SkipGramModel(self.emb_size, self.emb_dimension)
+        #self.model = CBOWModel(self.emb_size, self.emb_dimension)
 
         self.use_cuda = torch.cuda.is_available()
         print('cuda available', self.use_cuda)
@@ -54,7 +54,7 @@ class Word2VecTrainer:
                     scheduler.step()
 
                     running_loss = running_loss * 0.9 + loss.item() * 0.1
-                    if i > 0 and i % 20 == 0:
+                    if i > 0 and i % 1000 == 0:
                       print(" Loss: " + str(running_loss))
 
             self.model.save_embedding(self.data.id2word, self.output_file_name)

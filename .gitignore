@@ -1,5 +1,7 @@
-
+__pycache__
 __pycache__/*
-
+word2vec.egg-info
 
 \.idea/*
+build
+dist
