@@ -96,7 +96,7 @@ class CBOWModel(nn.Module):
         emb_v = torch.stack([ torch.sum(v,dim=0) for v in emb_v])
 
         emb_neg_v = torch.split(emb_neg_v, emb_u_counts)
-        emb_neg_v = [ torch.flatten(v, start_dim=0, end_dim=0) for v in emb_neg_v ]
+        emb_neg_v = [ torch.flatten(v, start_dim=0, end_dim=1) for v in emb_neg_v ]
 
         #print('emb_u shape', emb_u.shape)
         #print('emb_v shape', emb_v.shape)

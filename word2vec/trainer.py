@@ -8,7 +8,7 @@ from model import SkipGramModel, CBOWModel
 
 
 class Word2VecTrainer:
-    def __init__(self, input_file, output_file, emb_dimension=100, batch_size=100, window_size=10, iterations=1,
+    def __init__(self, input_file, output_file, model, emb_dimension=100, batch_size=8, window_size=10, iterations=1,
                  initial_lr=0.001, min_count=0):
 
         self.data = DataReader(input_file, min_count)
@@ -22,14 +22,15 @@ class Word2VecTrainer:
         self.batch_size = batch_size
         self.iterations = iterations
         self.initial_lr = initial_lr
-        self.model = SkipGramModel(self.emb_size, self.emb_dimension)
-        #self.model = CBOWModel(self.emb_size, self.emb_dimension)
 
+        self.model = CBOWModel(self.emb_size, self.emb_dimension) \
+            if model=='CBOW' else SkipGramModel(self.emb_size, self.emb_dimension)
+        
         self.use_cuda = torch.cuda.is_available()
-        print('cuda available', self.use_cuda)
-        self.device = torch.device("cuda" if self.use_cuda else "cpu")
-        if self.use_cuda:
+        self.device = torch.device("cuda" if self.use_cuda and model=='SKIP GRAM' else "cpu")
+        if self.use_cuda and model=='SKIP GRAM':
             self.model.cuda()
+        print('MODEL:', type(self.model), 'DEVICE:', self.device)
 
     def train(self):
 
@@ -61,5 +62,5 @@ class Word2VecTrainer:
 
 
 if __name__ == '__main__':
-    w2v = Word2VecTrainer(input_file="Aristo-mini.txt", output_file="out.vec")
+    w2v = Word2VecTrainer(input_file="Aristo-mini.txt", output_file="out.vec", model='SKIP GRAM')
     w2v.train()
