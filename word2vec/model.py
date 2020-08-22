@@ -103,14 +103,18 @@ class CBOWModel(nn.Module):
         #print('emb_u*emb_v shape', torch.mul(emb_u, emb_v).shape)
 
         score = torch.sum(torch.mul(emb_u, emb_v), dim=1)
-        score = torch.clamp(score, max=10, min=-10)
+        score = torch.clamp(score, max=10, min=-10).squeeze()
         score = -F.logsigmoid(score)
+
+        neg_score = torch.stack([ -torch.mean(F.logsigmoid(-torch.clamp( \
+            torch.matmul( emb_neg_v[i], v.unsqueeze(1)), max=10, min=-10))) \
+            for i,v in enumerate(emb_v)])
 
         #neg_score = torch.bmm(emb_neg_v, emb_u.unsqueeze(2)).squeeze()
         #neg_score = torch.clamp(neg_score, max=10, min=-10)
         #neg_score = -torch.sum(F.logsigmoid(-neg_score), dim=1)
 
-        return torch.mean(score)
+        return torch.mean(score + neg_score)
 
     def save_embedding(self, id2word, file_name):
         embedding = self.u_embeddings.weight.cpu().data.numpy()

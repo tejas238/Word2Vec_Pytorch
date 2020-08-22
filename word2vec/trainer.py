@@ -8,7 +8,7 @@ from model import SkipGramModel, CBOWModel
 
 
 class Word2VecTrainer:
-    def __init__(self, input_file, output_file, model, emb_dimension=100, batch_size=8, window_size=10, iterations=1,
+    def __init__(self, input_file, output_file, model, emb_dimension=100, batch_size=100, window_size=10, iterations=1,
                  initial_lr=0.001, min_count=0):
 
         self.data = DataReader(input_file, min_count)
@@ -55,12 +55,12 @@ class Word2VecTrainer:
                     scheduler.step()
 
                     running_loss = running_loss * 0.9 + loss.item() * 0.1
-                    if i > 0 and i % 1000 == 0:
+                    if i > 0 and i % 5 == 0:
                       print(" Loss: " + str(running_loss))
 
             self.model.save_embedding(self.data.id2word, self.output_file_name)
 
 
 if __name__ == '__main__':
-    w2v = Word2VecTrainer(input_file="Aristo-mini.txt", output_file="out.vec", model='SKIP GRAM')
+    w2v = Word2VecTrainer(input_file="Aristo-mini.txt", output_file="out.vec", model='CBOW')
     w2v.train()
