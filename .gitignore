@@ -5,3 +5,4 @@ word2vec.egg-info
 \.idea/*
 build
 dist
+*.ipynb

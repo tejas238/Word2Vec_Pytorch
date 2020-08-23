@@ -11,12 +11,14 @@ from torch.nn import init
 
 class SkipGramModel(nn.Module):
 
-    def __init__(self, emb_size, emb_dimension):
+    def __init__(self, emb_size, emb_dimension, id2word, word2id):
         super(SkipGramModel, self).__init__()
         self.emb_size = emb_size
         self.emb_dimension = emb_dimension
         self.u_embeddings = nn.Embedding(emb_size, emb_dimension, sparse=True)
         self.v_embeddings = nn.Embedding(emb_size, emb_dimension, sparse=True)
+        self.id2word = id2word
+        self.word2id = word2id
 
         initrange = 1.0 / self.emb_dimension
         init.uniform_(self.u_embeddings.weight.data, -initrange, initrange)
@@ -55,12 +57,14 @@ class SkipGramModel(nn.Module):
 
 class CBOWModel(nn.Module):
 
-    def __init__(self, emb_size, emb_dimension):
+    def __init__(self, emb_size, emb_dimension, id2word, word2id):
         super(CBOWModel, self).__init__()
         self.emb_size = emb_size
         self.emb_dimension = emb_dimension
         self.u_embeddings = nn.Embedding(emb_size, emb_dimension, sparse=True)
         self.v_embeddings = nn.Embedding(emb_size, emb_dimension, sparse=True)
+        self.id2word = id2word
+        self.word2id = word2id
 
         initrange = 1.0 / self.emb_dimension
         init.uniform_(self.u_embeddings.weight.data, -initrange, initrange)
@@ -70,12 +74,6 @@ class CBOWModel(nn.Module):
         #print('pos_u shape', pos_u.shape)
         #print('pos_v shape', pos_v.shape)
         #print('neg_v shape', neg_v.shape)
-
-        pos_u, index = torch.sort(pos_u)
-        pos_v = torch.gather(pos_v, dim=0, index=index)
-
-        index = index.unsqueeze(1).expand(len(index),neg_v.shape[1])
-        neg_v = torch.gather(input=neg_v, dim=0, index=index)
 
         emb_u = self.u_embeddings(pos_u)
         emb_v = self.v_embeddings(pos_v)
