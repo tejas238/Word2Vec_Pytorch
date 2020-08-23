@@ -6,3 +6,4 @@ word2vec.egg-info
 build
 dist
 *.ipynb
+*.obj
