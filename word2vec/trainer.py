@@ -10,7 +10,7 @@ from model import SkipGramModel, CBOWModel
 
 class Word2VecTrainer:
     def __init__(self, input_file, output_file, model, emb_dimension=100, batch_size=2, window_size=10, iterations=1,
-                 initial_lr=0.001, min_count=5):
+                 initial_lr=0.001, min_count=12):
 
         self.data = DataReader(input_file, min_count)
         dataset = Word2vecDataset(self.data, window_size)
@@ -96,5 +96,5 @@ class Word2VecTrainer:
 
 
 if __name__ == '__main__':
-    w2v = Word2VecTrainer(input_file="NF-Dickens.txt", output_file="out.vec", model='CBOW')
+    w2v = Word2VecTrainer(input_file="Aristo-mini.txt", output_file="out.vec", model='CBOW')
     w2v.train()
