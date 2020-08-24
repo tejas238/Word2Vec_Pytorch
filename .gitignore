@@ -5,5 +5,8 @@ word2vec.egg-info
 \.idea/*
 build
 dist
-*.ipynb
 *.obj
+runs/
+*.vec
+*.DS_Store
+*.txt
