@@ -91,7 +91,7 @@ class CBOWModel(nn.Module):
         emb_u = torch.stack(emb_u_temp)
 
         emb_v = torch.split(emb_v, emb_u_counts)
-        emb_v = torch.stack([ torch.mean(v,dim=0) for v in emb_v])
+        emb_v = torch.stack([ torch.sum(v,dim=0) for v in emb_v])
 
         emb_neg_v = torch.split(emb_neg_v, emb_u_counts)
         emb_neg_v = [ torch.flatten(v, start_dim=0, end_dim=1) for v in emb_neg_v ]
@@ -104,8 +104,8 @@ class CBOWModel(nn.Module):
         score = torch.clamp(score, max=10, min=-10).squeeze()
         score = -F.logsigmoid(score)
 
-        neg_score = torch.stack([ -torch.sum(F.logsigmoid(-torch.clamp( \
-            torch.matmul( emb_neg_v[i], v.unsqueeze(1)), max=10, min=-10)), dim=0) \
+        neg_score = torch.stack([ -torch.mean(F.logsigmoid(-torch.clamp( \
+            torch.matmul( emb_neg_v[i], v.unsqueeze(1)), max=10, min=-10))) \
             for i,v in enumerate(emb_v)])
 
         #neg_score = torch.bmm(emb_neg_v, emb_u.unsqueeze(2)).squeeze()
